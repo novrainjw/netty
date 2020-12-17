@@ -76,3 +76,4 @@ jint netty_unix_buffer_internal_JNI_OnLoad(JNIEnv* env, const char* packagePrefi
 void netty_unix_buffer_internal_JNI_OnUnLoad(JNIEnv* env, const char* packagePrefix) {
     netty_unix_buffer_JNI_OnUnLoad0(env, packagePrefix, 1);
 }
+
