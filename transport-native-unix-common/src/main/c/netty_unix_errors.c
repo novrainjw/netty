@@ -212,15 +212,17 @@ static const JNINativeMethod statically_referenced_fixed_method_table[] = {
 static const jint statically_referenced_fixed_method_table_size = sizeof(statically_referenced_fixed_method_table) / sizeof(statically_referenced_fixed_method_table[0]);
 // JNI Method Registration Table End
 
-jint netty_unix_errors_JNI_OnLoad(JNIEnv* env, const char* packagePrefix) {
+jint netty_unix_errors_JNI_OnLoad(JNIEnv* env, const char* packagePrefix, int registerNative) {
     char* nettyClassName = NULL;
-    // We must register the statically referenced methods first!
-    if (netty_jni_util_register_natives(env,
-            packagePrefix,
-            ERRORS_CLASSNAME,
-            statically_referenced_fixed_method_table,
-            statically_referenced_fixed_method_table_size) != 0) {
-        return JNI_ERR;
+    if (registerNative) {
+        // We must register the statically referenced methods first!
+        if (netty_jni_util_register_natives(env,
+                packagePrefix,
+                ERRORS_CLASSNAME,
+                statically_referenced_fixed_method_table,
+                statically_referenced_fixed_method_table_size) != 0) {
+            return JNI_ERR;
+        }
     }
 
     NETTY_JNI_UTIL_LOAD_CLASS(env, oomErrorClass, "java/lang/OutOfMemoryError", error);
@@ -244,7 +246,7 @@ error:
     return JNI_ERR;
 }
 
-void netty_unix_errors_JNI_OnUnLoad(JNIEnv* env, const char* packagePrefix) {
+void netty_unix_errors_JNI_OnUnLoad(JNIEnv* env, const char* packagePrefix, int unregisterNative) {
     // delete global references so the GC can collect them
     NETTY_JNI_UTIL_UNLOAD_CLASS(env, oomErrorClass);
     NETTY_JNI_UTIL_UNLOAD_CLASS(env, runtimeExceptionClass);
@@ -253,5 +255,7 @@ void netty_unix_errors_JNI_OnUnLoad(JNIEnv* env, const char* packagePrefix) {
     NETTY_JNI_UTIL_UNLOAD_CLASS(env, portUnreachableExceptionClass);
     NETTY_JNI_UTIL_UNLOAD_CLASS(env, closedChannelExceptionClass);
 
-    netty_jni_util_unregister_natives(env, packagePrefix, ERRORS_CLASSNAME);
+    if (unregisterNative) {
+        netty_jni_util_unregister_natives(env, packagePrefix, ERRORS_CLASSNAME);
+    }
 }

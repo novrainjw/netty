@@ -19,7 +19,7 @@
 #include <jni.h>
 
 // JNI initialization hooks. Users of this file are responsible for calling these in the JNI_OnLoad and JNI_OnUnload methods.
-jint netty_unix_buffer_JNI_OnLoad(JNIEnv* env, const char* packagePrefix);
-void netty_unix_buffer_JNI_OnUnLoad(JNIEnv* env, const char* packagePrefix);
+jint netty_unix_buffer_JNI_OnLoad(JNIEnv* env, const char* packagePrefix, int registerNative);
+void netty_unix_buffer_JNI_OnUnLoad(JNIEnv* env, const char* packagePrefix, int unregisterNative);
 
 #endif /* NETTY_UNIX_BUFFER_H_ */

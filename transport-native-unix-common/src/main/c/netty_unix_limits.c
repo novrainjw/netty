@@ -69,19 +69,23 @@ static const JNINativeMethod statically_referenced_fixed_method_table[] = {
 static const jint statically_referenced_fixed_method_table_size = sizeof(statically_referenced_fixed_method_table) / sizeof(statically_referenced_fixed_method_table[0]);
 // JNI Method Registration Table End
 
-jint netty_unix_limits_JNI_OnLoad(JNIEnv* env, const char* packagePrefix) {
-    // We must register the statically referenced methods first!
-    if (netty_jni_util_register_natives(env,
-            packagePrefix,
-            LIMITS_CLASSNAME,
-            statically_referenced_fixed_method_table,
-            statically_referenced_fixed_method_table_size) != 0) {
-        return JNI_ERR;
+jint netty_unix_limits_JNI_OnLoad(JNIEnv* env, const char* packagePrefix, int registerNative) {
+    if (registerNative) {
+        // We must register the statically referenced methods first!
+        if (netty_jni_util_register_natives(env,
+                packagePrefix,
+                LIMITS_CLASSNAME,
+                statically_referenced_fixed_method_table,
+                statically_referenced_fixed_method_table_size) != 0) {
+            return JNI_ERR;
+        }
     }
 
     return NETTY_JNI_UTIL_JNI_VERSION;
 }
 
-void netty_unix_limits_JNI_OnUnLoad(JNIEnv* env, const char* packagePrefix) {
-    netty_jni_util_unregister_natives(env, packagePrefix, LIMITS_CLASSNAME);
+void netty_unix_limits_JNI_OnUnLoad(JNIEnv* env, const char* packagePrefix, int unregisterNative) {
+    if (unregisterNative) {
+        netty_jni_util_unregister_natives(env, packagePrefix, LIMITS_CLASSNAME);
+    }
 }

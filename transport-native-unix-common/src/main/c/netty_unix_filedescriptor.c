@@ -278,11 +278,13 @@ static const JNINativeMethod method_table[] = {
 static const jint method_table_size = sizeof(method_table) / sizeof(method_table[0]);
 // JNI Method Registration Table End
 
-jint netty_unix_filedescriptor_JNI_OnLoad(JNIEnv* env, const char* packagePrefix) {
+jint netty_unix_filedescriptor_JNI_OnLoad(JNIEnv* env, const char* packagePrefix, int registerNative) {
     int ret = JNI_ERR;
     void* mem = NULL;
-    if (netty_jni_util_register_natives(env, packagePrefix, FILEDESCRIPTOR_CLASSNAME, method_table, method_table_size) != 0) {
-        goto done;
+    if (registerNative) {
+        if (netty_jni_util_register_natives(env, packagePrefix, FILEDESCRIPTOR_CLASSNAME, method_table, method_table_size) != 0) {
+            goto done;
+        }
     }
     if ((mem = malloc(1)) == NULL) {
         goto done;
@@ -316,6 +318,8 @@ done:
     return ret;
 }
 
-void netty_unix_filedescriptor_JNI_OnUnLoad(JNIEnv* env, const char* packagePrefix) {
-    netty_jni_util_unregister_natives(env, packagePrefix, FILEDESCRIPTOR_CLASSNAME);
+void netty_unix_filedescriptor_JNI_OnUnLoad(JNIEnv* env, const char* packagePrefix, int unregisterNative) {
+    if (unregisterNative) {
+        netty_jni_util_unregister_natives(env, packagePrefix, FILEDESCRIPTOR_CLASSNAME);
+    }
 }
