@@ -45,7 +45,7 @@
     <defaultJarFile>${project.build.directory}/${project.build.finalName}.jar</defaultJarFile>
     <nativeJarFile>${project.build.directory}/${project.build.finalName}-${jni.classifier}.jar</nativeJarFile>
     <generatedSourcesDir>${project.build.directory}/generated-sources</generatedSourcesDir>
-    <cflags>-O3 -Werror -Wno-attributes -fPIC -fno-omit-frame-pointer -Wunused-variable -fvisibility=hidden</cflags>
+    <cflags>-O3 -Werror -Wno-attributes -fPIC -fno-omit-frame-pointer -Wunused-variable -fvisibility=hidden -I${project.basedir}/src/main/c</cflags>
     <ldflags>-Wl,--no-as-needed -lrt</ldflags>
     <nativeLibArch>${os.detected.arch}</nativeLibArch>
     <build.native>false</build.native>

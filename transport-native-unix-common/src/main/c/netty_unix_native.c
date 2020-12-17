@@ -23,6 +23,12 @@
 #include "netty_unix_socket.h"
 #include "netty_unix_util.h"
 
+#include "internal/netty_unix_buffer_internal.h"
+#include "internal/netty_unix_errors_internal.h"
+#include "internal/netty_unix_filedescriptor_internal.h"
+#include "internal/netty_unix_limits_internal.h"
+#include "internal/netty_unix_socket_internal.h"
+
 // Add define if NETTY_BUILD_STATIC is defined so it is picked up in netty_jni_util.c
 #ifdef NETTY_BUILD_STATIC
 #define NETTY_JNI_UTIL_BUILD_STATIC
@@ -37,27 +43,27 @@ static jint netty_unix_native_JNI_OnLoad(JNIEnv* env, const char* packagePrefix)
     int bufferOnLoadCalled = 0;
 
     // Load all c modules that we depend upon
-    if (netty_unix_limits_JNI_OnLoad(env, packagePrefix, 1) == JNI_ERR) {
+    if (netty_unix_limits_internal_JNI_OnLoad(env, packagePrefix) == JNI_ERR) {
         goto done;
     }
     limitsOnLoadCalled = 1;
 
-    if (netty_unix_errors_JNI_OnLoad(env, packagePrefix, 1) == JNI_ERR) {
+    if (netty_unix_errors_internal_JNI_OnLoad(env, packagePrefix) == JNI_ERR) {
         goto done;
     }
     errorsOnLoadCalled = 1;
 
-    if (netty_unix_filedescriptor_JNI_OnLoad(env, packagePrefix, 1) == JNI_ERR) {
+    if (netty_unix_filedescriptor_internal_JNI_OnLoad(env, packagePrefix) == JNI_ERR) {
         goto done;
     }
     filedescriptorOnLoadCalled = 1;
 
-    if (netty_unix_socket_JNI_OnLoad(env, packagePrefix, 1) == JNI_ERR) {
+    if (netty_unix_socket_internal_JNI_OnLoad(env, packagePrefix) == JNI_ERR) {
         goto done;
     }
     socketOnLoadCalled = 1;
 
-    if (netty_unix_buffer_JNI_OnLoad(env, packagePrefix, 1) == JNI_ERR) {
+    if (netty_unix_buffer_internal_JNI_OnLoad(env, packagePrefix) == JNI_ERR) {
         goto done;
     }
     bufferOnLoadCalled = 1;
@@ -66,30 +72,30 @@ static jint netty_unix_native_JNI_OnLoad(JNIEnv* env, const char* packagePrefix)
 done:
     if (ret == JNI_ERR) {
         if (limitsOnLoadCalled == 1) {
-            netty_unix_limits_JNI_OnUnLoad(env, packagePrefix, 1);
+            netty_unix_limits_internal_JNI_OnUnLoad(env, packagePrefix);
         }
         if (errorsOnLoadCalled == 1) {
-            netty_unix_errors_JNI_OnUnLoad(env, packagePrefix, 1);
+            netty_unix_errors_internal_JNI_OnUnLoad(env, packagePrefix);
         }
         if (filedescriptorOnLoadCalled == 1) {
-            netty_unix_filedescriptor_JNI_OnUnLoad(env, packagePrefix, 1);
+            netty_unix_filedescriptor_internal_JNI_OnUnLoad(env, packagePrefix);
         }
         if (socketOnLoadCalled == 1) {
-            netty_unix_socket_JNI_OnUnLoad(env, packagePrefix, 1);
+            netty_unix_socket_internal_JNI_OnUnLoad(env, packagePrefix);
         }
         if (bufferOnLoadCalled == 1) {
-            netty_unix_buffer_JNI_OnUnLoad(env, packagePrefix, 1);
+            netty_unix_buffer_internal_JNI_OnUnLoad(env, packagePrefix);
         }
     }
     return ret;
 }
 
 static void netty_unix_native_JNI_OnUnload(JNIEnv* env, const char* packagePrefix) {
-    netty_unix_limits_JNI_OnUnLoad(env, packagePrefix, 1);
-    netty_unix_errors_JNI_OnUnLoad(env, packagePrefix, 1);
-    netty_unix_filedescriptor_JNI_OnUnLoad(env, packagePrefix, 1);
-    netty_unix_socket_JNI_OnUnLoad(env, packagePrefix, 1);
-    netty_unix_buffer_JNI_OnUnLoad(env, packagePrefix, 1);
+    netty_unix_limits_internal_JNI_OnUnLoad(env, packagePrefix);
+    netty_unix_errors_internal_JNI_OnUnLoad(env, packagePrefix);
+    netty_unix_filedescriptor_internal_JNI_OnUnLoad(env, packagePrefix);
+    netty_unix_socket_internal_JNI_OnUnLoad(env, packagePrefix);
+    netty_unix_buffer_internal_JNI_OnUnLoad(env, packagePrefix);
 }
 
 // Invoked by the JVM when statically linked
